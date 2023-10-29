@@ -1,5 +1,5 @@
 import { NextResponse,NextRequest } from "next/server";
-import { updateUser,changeUserInfo,deleteUser } from "@/app/api/controllers/users";
+import { updateUser,changeUserInfo,deleteUser,getUser } from "@/app/api/controllers/users";
 
 interface Params {
   params:{
@@ -8,12 +8,11 @@ interface Params {
 }
 
 export async function GET (_request:NextRequest,{ params }:Params){
-  console.log(params)
   try {
-    if(!params || params.userId === undefined) throw new Error('Params undefined')
-    return NextResponse.json({DIY:`get User ${params.userId}`})
+    const user = await getUser(params.userId);
+    return NextResponse.json(user,{status:200,statusText:'User found'})
 } catch (error:any) {
-    return NextResponse.json({error:error.message},{status:404})
+    return NextResponse.json({error:error.message},{status:404,statusText:'User not found'})
   }
 };
 
