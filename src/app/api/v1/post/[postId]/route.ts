@@ -1,5 +1,5 @@
 import { NextResponse,NextRequest } from "next/server";
-import { updatePost,deletePost } from "@/app/api/controllers/post";
+import { updatePost,deletePost,changeAuthorPost } from "@/app/api/controllers/post";
 
 interface Params {
   params:{
@@ -21,8 +21,14 @@ export async function PUT (request:NextRequest,{ params }:Params){
   }
 };
 
-export async function PATCH (_request:NextRequest,{ params }:Params){
-  return NextResponse.json({DIY:`Update Post ${params.postId}`})
+export async function PATCH (request:NextRequest,{ params }:Params){
+  const data = await request.json();
+  try {
+    const postChanged = await changeAuthorPost({postId:params.postId,userId:data});
+    return NextResponse.json(postChanged,{status:200,statusText:'Post Update'})
+  } catch (error:any) {
+    return NextResponse.json({error:error.message},{status:400})
+  }
 };
 
 
