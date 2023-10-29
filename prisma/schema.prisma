@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id     Int      @id @default(autoincrement())
-  nombre String
+  name String
   // Relación 1-n con Posts
   posts  Post[]
 }
@@ -31,7 +31,7 @@ model Post {
 
 model Category {
   id       Int      @id @default(autoincrement())
-  nombre   String
+  name   String
   // Otros campos de categoría
 
   // Relación m-n con Posts
