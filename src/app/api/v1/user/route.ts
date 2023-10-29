@@ -1,6 +1,6 @@
 import { NextResponse,NextRequest } from "next/server";
 
-import { createUser,getUsers } from "../../controllers/users";
+import { createUser,getUsers } from "@/app/api/controllers/users";
 
 export async function GET () {
   try {
