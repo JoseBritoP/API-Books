@@ -1,5 +1,5 @@
 import { NextResponse,NextRequest } from "next/server";
-import { createPost,getPosts } from '@/app/api/controllers/post'
+import { createPost,getPosts,createPostWithCategories } from '@/app/api/controllers/post'
 
 export async function GET () {
   try {
@@ -13,7 +13,8 @@ export async function GET () {
 export async function POST (req:NextRequest) {
   const data = await req.json();
   try {
-    const newPost = await createPost(data);
+    // const newPost = await createPost(data);
+    const newPost = await createPostWithCategories(data);
     return NextResponse.json(newPost,{status:201,statusText:'Post creado'})
   } catch (error:any) {
     return NextResponse.json({error:error.message},{status:400})
