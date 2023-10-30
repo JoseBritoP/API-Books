@@ -1,3 +1,5 @@
+import { PostInfo } from "./post"
+
 export interface NewUser {
   name:string
 }
@@ -19,4 +21,10 @@ export interface ChangeUser {
   data:{
     name:string
   }
+}
+
+export interface UserInfo {
+  id:number
+  name:string
+  posts:PostInfo[]
 }

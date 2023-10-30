@@ -1,8 +1,61 @@
 import { prisma } from "@/app/config/db";
 
+interface UserInfo {
+  id:number
+  name:string
+  posts:{
+    id:number,
+    title:string,
+    content:string,
+    category:{
+      id:number
+      name:string
+    }[]
+  }[]
+}
+const userFormat = (users:UserInfo[]) => {
+  return users.map((user)=>{
+    const { id,name,posts} = user;
+    return {
+      id,
+      name,
+      posts: !user.posts.length ? 'No tiene publicaciones' : user.posts.map((post)=>{
+        return {
+          id:post.id,
+          title:post.title,
+          content:post.content,
+          category: !post.category.length ? 'No tiene categorías' : post.category
+        }
+      })
+    }
+  })
+};
+
+
 export const getUsers = async () => {
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    select:{
+      id:true,
+      name:true,
+      posts:{
+        select:{
+          id:true,
+          title:true,
+          content:true,
+          category:{
+            select:{
+              id:true,
+              name:true
+            }
+          }
+        },
+      }
+    }
+  });
   if(!users.length) throw new Error('No hay usuarios');
+
+  const cleanUsers = userFormat(users)
+  return cleanUsers
   return users
 };
 
