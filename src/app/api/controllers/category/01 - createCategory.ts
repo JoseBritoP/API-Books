@@ -1,9 +1,5 @@
 import { prisma } from "@/app/config/db";
-
-
-interface Props {
-  name:string
-};
+import { NewCategory } from "@/app/api/interfaces/category";
 
 const categoryExist = async (name:string) => {
   const existingCategory = await prisma.category.findMany({
@@ -16,7 +12,7 @@ const categoryExist = async (name:string) => {
 
 };
 
-export const createCategory = async(data:Props) => {
+export const createCategory = async(data:NewCategory) => {
 
   await categoryExist(data.name);
 

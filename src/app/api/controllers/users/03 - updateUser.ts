@@ -1,13 +1,7 @@
 import { prisma } from "@/app/config/db";
+import { UpdateUser as UpdateUserInterface } from "@/app/api/interfaces/user";
 
-interface Props {
-  id:string
-  data:{
-    name:string
-  }
-}
-
-export const updateUser = async ({id,data}:Props) => {
+export const updateUser = async ({id,data}:UpdateUserInterface) => {
   const userUpdated = await prisma.user.update({
     where:{
       id:+id

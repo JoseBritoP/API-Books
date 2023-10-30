@@ -1,8 +1,6 @@
 import { prisma } from "@/app/config/db";
+import { NewUser } from "@/app/api/interfaces/user";
 
-interface Props {
-  name:string
-}
 
 const userExist = async (name:string) => {
   const user = await prisma.user.findMany({
@@ -15,7 +13,7 @@ const userExist = async (name:string) => {
 
 };
 
-export const createUser = async (data:Props) => {
+export const createUser = async (data:NewUser) => {
 
   await userExist(data.name);
 

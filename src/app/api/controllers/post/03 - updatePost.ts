@@ -1,15 +1,10 @@
 import { prisma } from "@/app/config/db";
 
-interface Props {
-  postId:string,
-  data:{
-    title:string
-    content:string
-    userId:string
-  }
-};
+import { UpdatePost as UpdatePostInterface } from "@/app/api/interfaces/post";
 
-export const updatePost = async ({postId,data}:Props) => {
+
+
+export const updatePost = async ({postId,data}:UpdatePostInterface) => {
   const user = await prisma.user.findUnique({
     where:{
       id:+data.userId

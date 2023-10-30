@@ -1,19 +1,8 @@
 import { prisma } from "@/app/config/db";
 
-interface Props {
-  title:string
-  content:string
-  userId:string
-};
+import { NewPost,NewPostV2 } from "@/app/api/interfaces/post";
 
-interface PropsV2 {
-  title:string
-  content:string
-  userId:string
-  categories: number[]
-};
-
-export const createPost = async (data:Props) => {
+export const createPost = async (data:NewPost) => {
 
   const author = await prisma.user.findUnique({where:{
     id:+data.userId
@@ -37,7 +26,7 @@ export const createPost = async (data:Props) => {
   }
 };
 
-export const createPostWithCategories = async (data:PropsV2) => {
+export const createPostWithCategories = async (data:NewPostV2) => {
 
   // Transforma los IDs de categorías en un formato adecuado para el connect
   const categoriesToConnect =  data.categories.map((categoryId) => {

@@ -1,19 +1,6 @@
 import { prisma } from "@/app/config/db";
 
-interface Category {
-  id:number
-  name:string
-}
-
-interface PostInfo {
-  id:number
-  title:string
-  content:string
-  user:{
-    name:string
-  },
-  category: Category[]
-}
+import { PostInfo } from "@/app/api/interfaces/post";
 
 const postFormat = (posts:PostInfo[]) => {
   return posts.map((post)=>{

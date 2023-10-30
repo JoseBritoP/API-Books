@@ -1,11 +1,7 @@
 import { prisma } from "@/app/config/db";
+import { ChangeAuthorPost as ChangeAuthorPostInterface } from "@/app/api/interfaces/post";
 
-interface Props {
-  postId:string,
-  userId:string
-}
-
-export const changeAuthorPost = async({postId,userId}:Props) => {
+export const changeAuthorPost = async({postId,userId}:ChangeAuthorPostInterface) => {
   const postToChange = await prisma.post.update({
     where:{
       id:+postId
