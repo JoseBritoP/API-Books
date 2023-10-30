@@ -41,3 +41,26 @@ export const getPosts = async() => {
   const cleanPosts =  postFormat(posts)
   return cleanPosts
 };
+
+export const getPost = async(postId:string) => {
+  const post = await prisma.post.findUnique({
+    where:{
+      id:+postId
+    },
+    select:{
+      id:true,
+      title:true,
+      content:true,
+      category:{
+        select:{
+          id:true,
+          name:true
+        }
+      }
+    }
+  });
+
+  if(!post) throw new Error('No se encontró el post');
+
+  return post
+};

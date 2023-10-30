@@ -1,5 +1,5 @@
 import { NextResponse,NextRequest } from "next/server";
-import { updatePost,deletePost,changeAuthorPost } from "@/app/api/controllers/post";
+import { updatePost,deletePost,changeAuthorPost,updatePostInfo,getPost } from "@/app/api/controllers/post";
 
 interface Params {
   params:{
@@ -8,13 +8,19 @@ interface Params {
 }
 
 export async function GET (_request:NextRequest,{ params }:Params){
-  return NextResponse.json({DIY:`get Post ${params.postId}`})
+  try {
+    const post = await getPost(params.postId);
+    return NextResponse.json(post,{status:200,statusText:'Post OK'})
+  } catch (error:any) {
+    return NextResponse.json({error:error.message},{status:404,statusText:'Post not found'})
+  }
 };
 
 export async function PUT (request:NextRequest,{ params }:Params){
   const data = await request.json();
   try {
-    const updatedPost = await updatePost({postId:params.postId,data});
+    // const updatedPost = await updatePost({postId:params.postId,data});
+    const updatedPost = await updatePostInfo({postId:params.postId,data});
     return NextResponse.json(updatedPost,{status:200,statusText:'Post Update'})
   } catch (error:any) {
     return NextResponse.json({error:error.message},{status:400})

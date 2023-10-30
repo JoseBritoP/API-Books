@@ -32,6 +32,16 @@ export interface UpdatePost {
   }
 };
 
+export interface UpdatePostV2 {
+  postId:string,
+  data:{
+    title:string
+    content:string
+    userId:string,
+    categories:number[]
+  }
+};
+
 export interface ChangeAuthorPost {
   postId:string,
   userId:string
