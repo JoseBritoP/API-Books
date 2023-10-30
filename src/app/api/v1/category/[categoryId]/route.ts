@@ -1,4 +1,5 @@
 import { NextResponse,NextRequest } from "next/server";
+import { getCategory,deleteCategory } from "@/app/api/controllers/category";
 
 interface Params {
   params:{
@@ -7,7 +8,12 @@ interface Params {
 }
 
 export async function GET (_request:NextRequest,{ params }:Params){
-  return NextResponse.json({DIY:`get Category ${params.categoryId}`})
+  try {
+    const category = await getCategory(params.categoryId);
+    return NextResponse.json(category,{status:200,statusText:'OK'})
+  } catch (error:any) {
+    return NextResponse.json({error:error.message},{status:404,statusText:'Category Not found'})
+  }
 };
 
 export async function PUT (_request:NextRequest,{ params }:Params){
@@ -20,5 +26,10 @@ export async function PATCH (_request:NextRequest,{ params }:Params){
 
 
 export async function DELETE (_request:NextRequest,{ params }:Params){
-  return NextResponse.json({DIY:`Delete category ${params.categoryId}`})
+  try {
+    const categoryDeleted = await deleteCategory(params.categoryId);
+    return NextResponse.json(categoryDeleted,{status:200,statusText:'Deleted'})
+  } catch (error:any) {
+    return NextResponse.json({error:error.message},{status:404,statusText:'Error'})
+  }
 };
