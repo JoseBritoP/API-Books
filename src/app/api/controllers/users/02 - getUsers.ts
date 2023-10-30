@@ -19,7 +19,7 @@ const userFormat = (users:UserInfo[]) => {
     return {
       id,
       name,
-      posts: !user.posts.length ? 'No tiene publicaciones' : user.posts.map((post)=>{
+      posts: !posts.length ? 'No tiene publicaciones' : posts.map((post)=>{
         return {
           id:post.id,
           title:post.title,
