@@ -123,3 +123,7 @@ export const getUsersByName = async (name:string) => {
   const cleanUsers = userFormat(users);
   return cleanUsers;
 };
+
+export const getUsersAPI = () => {
+  
+};
