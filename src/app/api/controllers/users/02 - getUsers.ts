@@ -31,7 +31,6 @@ const userFormat = (users:UserInfo[]) => {
   })
 };
 
-
 export const getUsers = async () => {
   const users = await prisma.user.findMany({
     select:{
@@ -90,4 +89,37 @@ export const getUser = async(userId:string) => {
   if(!user) throw new Error(`No se encontró el usuario`);
 
   return user
+};
+
+export const getUsersByName = async (name:string) => {
+  const users = await prisma.user.findMany({
+    where:{
+      name:{
+        contains:name,
+        mode:'insensitive'
+      }
+    },
+    select:{
+      id:true,
+      name:true,
+      posts:{
+        select:{
+          id:true,
+          title:true,
+          content:true,
+          category:{
+            select:{
+              id:true,
+              name:true
+            }
+          }
+        },
+      }
+    }
+  });
+
+  if(!users.length) throw new Error(`No hay usuarios llamados ${name.toLowerCase()}`)
+
+  const cleanUsers = userFormat(users);
+  return cleanUsers;
 };

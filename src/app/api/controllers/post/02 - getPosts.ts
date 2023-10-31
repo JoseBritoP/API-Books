@@ -64,3 +64,35 @@ export const getPost = async(postId:string) => {
 
   return post
 };
+
+export const getPostsByTitle = async (title:string) => {
+  const posts = await prisma.post.findMany({
+    where:{
+      title:{
+        contains: title,
+        mode: "insensitive"
+      }
+    },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      user: {
+        select: {
+          name: true, // Incluye el nombre del usuario
+        },
+      },
+      category:{
+        select:{
+          id:true,
+          name:true
+        }
+      }
+    },
+  });
+
+  if(!posts.length) throw new Error(`No hay títulos llamados ${title.toLowerCase()}`)
+  const cleanPosts =  postFormat(posts)
+  return cleanPosts
+  return posts;
+};

@@ -1,10 +1,11 @@
 import { NextResponse,NextRequest } from "next/server";
-import { createPost,getPosts,createPostWithCategories } from '@/app/api/controllers/post'
+import { createPost,getPosts,createPostWithCategories,getPostsByTitle } from '@/app/api/controllers/post'
 
-export async function GET () {
+export async function GET (req:NextRequest) {
+  const title = req.nextUrl.searchParams.get('title')
   try {
-    const allPosts = await getPosts();
-    return NextResponse.json(allPosts,{status:200,statusText:'All Posts'})
+    const posts = title ? await getPostsByTitle(title) : await getPosts();
+    return NextResponse.json(posts,{status:200,statusText:'All Posts'})
   } catch (error:any) {
     return NextResponse.json({error:error.message},{status:404})
   }
