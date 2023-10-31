@@ -1,10 +1,11 @@
 import { NextResponse,NextRequest } from "next/server";
 
-import { createUser,getUsers } from "@/app/api/controllers/users";
+import { createUser,getUsers,getUsersByName } from "@/app/api/controllers/users";
 
-export async function GET () {
+export async function GET (req:NextRequest) {
+  const name = req.nextUrl.searchParams.get('name');
   try {
-    const users = await getUsers();
+    const users = name ? await getUsersByName(name) : await getUsers();
     return NextResponse.json(users,{status:200})
   } catch (error:any) {
     return NextResponse.json({error:error.message},{status:400})
