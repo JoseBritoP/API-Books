@@ -24,7 +24,7 @@ export const getPosts = async() => {
       content: true,
       user: {
         select: {
-          name: true, // Incluye el nombre del usuario
+          name: true,
         },
       },
       category:{
@@ -35,8 +35,14 @@ export const getPosts = async() => {
       }
     },
   });
-
-  if(!posts.length) throw new Error(`No hay posts en la base de datos`);
+  
+  if(!posts.length){
+   const posts = await getPostsAPI();
+   console.log('Post tomados de la API')
+   const cleanPosts =  postFormat(posts)
+   return cleanPosts
+  }
+  // if(!posts.length) throw new Error(`No hay posts en la base de datos`);
 
   const cleanPosts =  postFormat(posts)
   return cleanPosts
@@ -96,3 +102,52 @@ export const getPostsByTitle = async (title:string) => {
   return cleanPosts
   return posts;
 };
+
+export const getPostsAPI = () => {
+  return fetch('https://jsonplaceholder.typicode.com/posts')
+  .then((response)=> response.json())
+  .then((json:{
+    id:number,
+    userId:number,
+    title:string,
+    body:string
+  }[])=>{
+
+    const postsMap = json.map((post)=>({
+      title:post.title,
+      content:post.body,
+      userId:post.userId
+    }))
+
+    return prisma.post.createMany({
+      data:postsMap
+    })
+    .then(()=>{
+      return prisma.post.findMany({
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          user: {
+            select: {
+              name: true, // Incluye el nombre del usuario
+            },
+          },
+          category:{
+            select:{
+              id:true,
+              name:true
+            }
+          }
+        },
+      })
+      .then((posts)=>{
+        return posts
+      });
+
+    })
+  })
+  .catch((error)=>{
+    throw new Error(`Error al obtener los posts desde la API: ${error.message}`)
+  })
+}

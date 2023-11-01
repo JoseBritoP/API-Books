@@ -51,11 +51,17 @@ export const getUsers = async () => {
       }
     }
   });
-  if(!users.length) throw new Error('No hay usuarios');
+
+  
+  if(users.length === 0){
+    const usersApi = await getUsersAPI();
+    const cleanUsers = userFormat(usersApi);
+    return cleanUsers;
+  }
+  // if(!users.length) throw new Error('No hay usuarios');
 
   const cleanUsers = userFormat(users)
   return cleanUsers
-  return users
 };
 
 export const getUser = async(userId:string) => {
@@ -125,5 +131,44 @@ export const getUsersByName = async (name:string) => {
 };
 
 export const getUsersAPI = () => {
-  
+  return fetch('https://jsonplaceholder.typicode.com/users')
+    .then((response) => response.json())
+    .then((json:{id:number,name:string,email:string}[]) => {
+      const usersMap = json.map((user) => ({
+        name: user.name,
+        email:user.email
+      }));
+
+      return prisma.user.createMany({
+        data: usersMap,
+      })
+        .then(() => {
+          return prisma.user.findMany({
+            select:{
+              id:true,
+              name:true,
+              posts:{
+                select:{
+                  id:true,
+                  title:true,
+                  content:true,
+                  category:{
+                    select:{
+                      id:true,
+                      name:true
+                    }
+                  }
+                },
+              }
+            }
+          });
+        })
+        .then((users) => {
+    
+          return users;
+        });
+    })
+    .catch((error) => {
+      throw new Error(`Error al obtener usuarios desde la API: ${error.message}`);
+    })
 };

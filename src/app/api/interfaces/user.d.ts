@@ -1,12 +1,14 @@
 import { PostInfo } from "./post"
 
 export interface NewUser {
-  name:string
+  name:string,
+  email:string
 }
 
 export interface User {
   id:number
   name:string
+  email:string
 }
 
 export interface UpdateUser {

@@ -4,10 +4,6 @@ import { createUser,getUsers,getUsersByName } from "@/app/api/controllers/users"
 
 export async function GET (req:NextRequest) {
   const name = req.nextUrl.searchParams.get('name');
-  const api = fetch('https://jsonplaceholder.typicode.com/users')
-  .then(response => response.json())
-  .then(json => console.log(json))
-  
   try {
     const users = name ? await getUsersByName(name) : await getUsers();
     return NextResponse.json(users,{status:200})
