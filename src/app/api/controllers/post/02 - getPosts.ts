@@ -151,3 +151,33 @@ export const getPostsAPI = () => {
     throw new Error(`Error al obtener los posts desde la API: ${error.message}`)
   })
 }
+
+export const getPostByPage = async (page:number,pageSize:number) => {
+  const postSkipped = (page - 1) * pageSize;
+
+  const posts = await prisma.post.findMany({
+    skip:postSkipped,
+    take: pageSize,
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      user: {
+        select: {
+          name: true,
+        },
+      },
+      category:{
+        select:{
+          id:true,
+          name:true
+        }
+      }
+    },
+  });
+  
+  if(!posts.length) throw new Error(`No hay posts`)
+  const cleanPosts =  postFormat(posts)
+  return cleanPosts
+  // return posts;
+};
