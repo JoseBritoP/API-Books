@@ -1,5 +1,5 @@
 import { NextResponse,NextRequest } from "next/server";
-import { updatePost,deletePost,changeAuthorPost,updatePostInfo,getPost,insertCategoriesInPost } from "@/app/api/controllers/post";
+import { deletePost,changeAuthorPost,updatePostInfo,getPost,insertCategoriesInPost } from "@/app/api/controllers/post";
 
 interface Params {
   params:{

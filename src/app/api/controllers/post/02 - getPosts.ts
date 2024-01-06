@@ -152,12 +152,18 @@ export const getPostsAPI = () => {
   })
 }
 
-export const getPostByPage = async (page:number,pageSize:number) => {
-  const postSkipped = (page - 1) * pageSize;
+export const getPostByPage = async (page:number=1) => {
+
+  const pageNumber = Math.max(1, Math.floor(page));
+
+
+  const postsPerPage = 2;
+
+  const postSkipped = (pageNumber - 1) * postsPerPage;
 
   const posts = await prisma.post.findMany({
     skip:postSkipped,
-    take: pageSize,
+    take: postsPerPage,
     select: {
       id: true,
       title: true,
@@ -176,7 +182,7 @@ export const getPostByPage = async (page:number,pageSize:number) => {
     },
   });
   
-  if(!posts.length) throw new Error(`No hay posts`)
+  if(!posts.length) throw new Error(`No hay más posts`)
   const cleanPosts =  postFormat(posts)
   return cleanPosts
   // return posts;
