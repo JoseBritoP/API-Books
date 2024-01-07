@@ -27,7 +27,7 @@ model Post {
   user  User  @relation(fields: [userId], references: [id])
   userId Int
    // Relación m-n con Categorías
-  category  Category[] 
+  category  Category[]
 }
 
 model Category {

@@ -10,7 +10,7 @@ interface UserInfo {
     category:{
       id:number
       name:string
-    }[]
+    }[],
   }[]
 }
 const userFormat = (users:UserInfo[]) => {
@@ -24,7 +24,8 @@ const userFormat = (users:UserInfo[]) => {
           id:post.id,
           title:post.title,
           content:post.content,
-          category: !post.category.length ? 'No tiene categorías' : post.category
+          category: !post.category.length ? 'No tiene categorías' : post.category,
+          // createdAt:post.createdAt
         }
       })
     }
@@ -33,23 +34,27 @@ const userFormat = (users:UserInfo[]) => {
 
 export const getUsers = async () => {
   const users = await prisma.user.findMany({
-    select:{
-      id:true,
-      name:true,
-      posts:{
-        select:{
-          id:true,
-          title:true,
-          content:true,
-          category:{
-            select:{
-              id:true,
-              name:true
-            }
-          }
+    select: {
+      id: true,
+      name: true,
+      posts: {
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
-      }
-    }
+        orderBy: {
+          title: 'desc', // Ordenar por fecha de creación en orden descendente
+        },
+        take: 2, // Obtener solo los últimos 2 posts
+      },
+    },
   });
 
   
